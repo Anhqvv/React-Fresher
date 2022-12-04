@@ -3,27 +3,38 @@
 import { useEffect, useState } from 'react';
 import {Table, Container}  from 'react-bootstrap'
 import { fetchAllUser } from '../services/UserServices';
-
+import ReactPaginate from 'react-paginate';
 
 
 const TableUser = (props) => {
    const [listUser, setListUser] = useState([])
+   const [page, setPage] = useState('1')
+   const [perPage, setPerPage] = useState('')
+   // const [totalUsers, setTotalUsers] = useState('')
+   const [totalPages, setTotalPages] = useState('')
 
    useEffect( () => {
       //Call API
-      getUsers()
+      getUsers(page)
 
    },[])
 
-   const getUsers = async () => {
-      let res = await fetchAllUser()
-      if(res && res.data && res.data.data) {
-         setListUser(res.data.data)
-
-      
+   const getUsers = async (page) => {
+      let res = await fetchAllUser(page)
+      if(res && res.data) {
+         setListUser(res.data)
+         setPage(res.page)
+         setPerPage(res.per_page)
+         // setTotalUsers(res.total)
+         setTotalPages(res.total_pages)
+         console.log("Checking res", res)
       }
    }
-   console.log("Checking res data", listUser)
+
+   const handlePageClick = (event) => {
+      getUsers(event.selected + 1)
+// console.log('handlePageClick',event.selected + 1 )
+   }
 
    return <>
    <Container>
@@ -54,6 +65,26 @@ const TableUser = (props) => {
         </tr>
       </tbody>
     </Table>
+    <ReactPaginate
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={perPage}
+        pageCount={totalPages}
+        previousLabel="< previous"
+        //css paginate
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+        renderOnZeroPageCount={null}
+      />
     </Container>
    
    </>
