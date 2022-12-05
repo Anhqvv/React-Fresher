@@ -1,11 +1,12 @@
-import axios from "./Axios"
+import axios from './Axios';
 const fetchAllUser = (pageData) => {
-    console.log('pageData', pageData)
+    return axios.get(`/api/users?page=${pageData}`);
+};
+
+const postCreateUser = (name, job) => {
     return (
-        axios.get(`/api/users?page=${pageData}`)
-
+        axios.post("/api/users", {name , job})
     )
+
 }
-
-export {fetchAllUser}
-
+export { fetchAllUser, postCreateUser };
