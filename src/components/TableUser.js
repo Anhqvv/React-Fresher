@@ -32,6 +32,7 @@ const TableUser = (props) => {
     //filter sort
     const [sortBy, setSortBy] = useState('asc');
     const [sortField, setsortField] = useState('id');
+    const [keyWord, setKeyWord] = useState();
 
     useEffect(() => {
         //Call API
@@ -89,6 +90,18 @@ const TableUser = (props) => {
         cloneListUser = _.orderBy(cloneListUser, [sortField], [sortBy]);
         setListUser(cloneListUser);
     };
+
+    const handleSearch =_.debounce( (event) => {
+        let term = event.target.value;
+        console.log('Checking term',term);
+        if (term) {
+            let cloneListUser = _.cloneDeep(listUser);
+            cloneListUser = cloneListUser.filter( (item) => item.email.includes(term)) 
+            setListUser(cloneListUser)
+        } else {
+            getUsers()
+        }
+    },500)
     return (
         <>
             <Container>
@@ -100,6 +113,13 @@ const TableUser = (props) => {
                     >
                         Add new user
                     </button>
+                </div>
+                <div className="col-4 my-3">
+                    <input
+                        className="form-control"
+                        placeholder="Search user by email ..."
+                        onChange={(event) => handleSearch(event)}
+                    />
                 </div>
                 <Table striped bordered hover>
                     <thead>
