@@ -7,4 +7,14 @@
     display: flex;
     gap: 10px;
   }
+  .header-sort {
+    display: flex;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    i {
+      cursor: pointer;
+      padding: 0 5px;
+    }
+  }
 }
